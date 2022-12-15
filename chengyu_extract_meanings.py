@@ -2,13 +2,10 @@
 
 import json
 import sys
-import csv
 
 import hanziconv
 
-w = csv.writer(sys.stdout)
-
-results = {}
+results = []
 for line in sys.stdin:
     j = json.loads(line)
     title = j['title']
@@ -24,10 +21,6 @@ for line in sys.stdin:
     if len(title) != 4:
         continue
     title = hanziconv.HanziConv.toSimplified(title)
-    results[title] = last_line
+    results.append([title, last_line])
 
-#print(json.dumps(results))
-print(json.dumps([[k, v] for k, v in results.items()]))
-
-#for title, last_line in results.items():
-#    w.writerow([title, last_line])
+print(json.dumps(results, indent=2))
