@@ -23,4 +23,4 @@ for line in sys.stdin:
     title = hanziconv.HanziConv.toSimplified(title)
     results.append([title, last_line])
 
-print(json.dumps(results, indent=2))
+print(json.dumps(results, indent=2, ensure_ascii=False))
