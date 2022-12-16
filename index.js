@@ -1,54 +1,54 @@
-async function load_chengyu() {
-    response = await fetch('chengyu-parsed.json');
-    ret = await response.json();
-    return ret
+async function loadChengyu() {
+  response = await fetch('chengyu-parsed.json');
+  ret = await response.json();
+  return ret;
 }
 
-function random_item(items) {
-    return items[Math.floor(Math.random()*items.length)];
+function randomItem(items) {
+  return items[Math.floor(Math.random()*items.length)];
 }
 
-function gen_question(chengyu) {
-    answers = [];
-    while (answers.length < 4) {
-        random_answer = random_item(chengyu);
-        if (!answers.includes(random_answer)) {
-            answers.push(random_answer);
-        }
+function genQuestion(chengyu) {
+  answers = [];
+  while (answers.length < 4) {
+    randomAnswer = randomItem(chengyu);
+    if (!answers.includes(randomAnswer)) {
+      answers.push(randomAnswer);
     }
-    return answers;
+  }
+  return answers;
 }
 
-function on_correct_answer() {
-    score += 1
-    display_next_question()
+function onCorrectAnswer() {
+  score += 1;
+  displayNextQuestion();
 }
 
-function on_wrong_answer() {
-    alert('Wrong! The right answer was: ' + correct_answer[1]);
-    display_next_question()
+function onWrongAnswer() {
+  alert('Wrong! The right answer was: ' + correctAnswer[1]);
+  displayNextQuestion();
 }
 
-function build_question_html(question, body) {
-    correct_answer = random_item(question);
-    html = correct_answer[0] + '<br><ol>';
-    for(i=0; i<question.length; i++) {
-        if (question[i] == correct_answer) {
-            html += '<li><button onclick="on_correct_answer()">' + question[i][1] + '</button></li>'
-        }
-        else {
-            html += '<li><button onclick="on_wrong_answer()">' + question[i][1] + '</button></li>'
-        }
+function buildQuestionHTML(question, body) {
+  correctAnswer = randomItem(question);
+  html = correctAnswer[0] + '<br><ol>';
+  for (i=0; i<question.length; i++) {
+    html += '<li><button onclick="';
+    if (question[i] == correctAnswer) {
+      html += 'onCorrectAnswer()">' + question[i][1] + '</button></li>';
+    } else {
+      html += 'onWrongAnswer()">' + question[i][1] + '</button></li>';
     }
-    return html + '</ol>'
+  }
+  return html + '</ol>';
 }
 
-async function display_next_question(){
-    chengyu = await load_chengyu()
-    question = gen_question(chengyu);
-    body = document.getElementById('body');
-    question_html = build_question_html(question, body);
-    body.innerHTML = 'Score: ' + score + '<br>' + question_html;
+async function displayNextQuestion() {
+  chengyu = await loadChengyu();
+  question = genQuestion(chengyu);
+  body = document.getElementById('body');
+  questionHTML = buildQuestionHTML(question, body);
+  body.innerHTML = 'Score: ' + score + '<br>' + questionHTML;
 }
 score = 0;
-display_next_question();
+displayNextQuestion();
